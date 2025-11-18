@@ -1,0 +1,10 @@
+(cap,2)
+(cap , 2)
+(cap           ,        2)
+ (         cap   , 2        )
+hossam ' hello (cap, 2)' >>> hossam 'Hello'
+(cap,    2           1          )
+(CAP,   2)
+(           hex             )   >>>    ( hex )
+
+hello world  (CAP, (low, 5) 2)    >>>   hello world (cap, 2)   >>>   Hello World
