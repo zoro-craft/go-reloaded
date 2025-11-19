@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"strings"
 )
 
 func main() {
@@ -24,7 +23,7 @@ func main() {
 			fmt.Println("file does not exist")
 		} else {
 			text := string(textAsBytes)
-			unprocessedwords := strings.Fields(text)
+			fmt.Print(text)
 		}
 	}
 
