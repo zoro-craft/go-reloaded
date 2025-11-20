@@ -37,5 +37,8 @@ func main() {
 			linesTokens = append(linesTokens, lineTokens)
 		}
 		fmt.Print(linesTokens)
+		//---------process text---------
+		//handle hex and bin
+		
 	}
 }
