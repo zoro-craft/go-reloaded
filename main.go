@@ -7,38 +7,46 @@ import (
 )
 
 func main() {
-	//---------handling text extraction---------
-	//verify that input and output file names are provided
+	// --------- Validate Command Line Arguments ---------
+
+	// Ensure both input and output file names are provided
 	if len(os.Args) == 1 {
 		fmt.Println("input and output files names missing")
+		return
 	}
 	if len(os.Args) == 2 {
 		fmt.Println("output file's name missing")
+		return
 	}
 	if len(os.Args) == 3 {
-		//collect input and output files names
-		iFileName := os.Args[1]
-		//oFIleName := os.Args[2]
-		//collect text from the input file
-		textAsBytes, err := os.ReadFile(iFileName)
+		// Extract input and output file names from arguments
+		inputFile := os.Args[1]
+		// outputFile := os.Args[2]
+
+		// --------- Read Input File ---------
+		// Read the entire file content as bytes
+		content, err := os.ReadFile(inputFile)
 		if err != nil {
 			fmt.Println("file does not exist")
 			return
 		}
-		//convert bytes to a string
-		text := string(textAsBytes)
-		//---------splitting text---------
-		//split by new lines
+		// Convert file content from bytes to string
+		text := string(content)
+		// --------- Tokenize Text ---------
+		// Split content into individual lines
 		lines := strings.Split(text, "\n")
-		//split each line by space
+		// Split each line into words (tokens)
 		linesTokens := [][]string{}
 		for _, line := range lines {
-			lineTokens := strings.Split(line, " ")
-			linesTokens = append(linesTokens, lineTokens)
+			tokens := strings.Split(line, " ")
+			linesTokens = append(linesTokens, tokens)
 		}
-		fmt.Print(linesTokens)
-		//---------process text---------
-		//handle hex and bin
-		
+		// --------- Process Tokens ---------
+		// Process hexadecimal and binary conversions
+		linesTokensHexBinHandled := [][]string{}
+		for _, lineTokens := range linesTokens {
+			linesTokensHexBinHandled = append(linesTokensHexBinHandled, handleHexAndBin(lineTokens))
+		}
+		fmt.Print(linesTokensHexBinHandled)
 	}
 }
