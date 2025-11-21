@@ -38,7 +38,7 @@ func main() {
 		// Split each line into words (tokens)
 		linesTokens := [][]string{}
 		for _, line := range lines {
-			tokens := strings.Split(line, " ")
+			tokens := strings.Fields(line)
 			linesTokens = append(linesTokens, tokens)
 		}
 		// --------- Process Tokens ---------
