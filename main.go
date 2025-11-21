@@ -47,6 +47,12 @@ func main() {
 		for _, lineTokens := range linesTokens {
 			linesTokensHexBinHandled = append(linesTokensHexBinHandled, handleHexAndBin(lineTokens))
 		}
-		fmt.Print(linesTokensHexBinHandled)
+		fmt.Println(linesTokensHexBinHandled)
+		// process the simple uppercase and lowercase and capitalize conversions
+		linesUpLowCapHandled := [][]string{}
+		for _, lineTokens := range linesTokensHexBinHandled {
+			linesUpLowCapHandled = append(linesUpLowCapHandled, handleUpLowCap(lineTokens))
+		}
+		fmt.Println(linesUpLowCapHandled)
 	}
 }

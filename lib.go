@@ -1,12 +1,15 @@
 package main
 
-import "strconv"
+import (
+	"strconv"
+	"strings"
+)
 
 func handleHexAndBin(tokens []string) []string {
 	// Iterate through all tokens
 	for i := 0; i < len(tokens); i++ {
 		currentToken := tokens[i]
-		// Check if current token is a hexadecimal conversion marker
+		// Check if current token is a hexadecimal or binary conversion marker
 		if currentToken == "(hex)" || currentToken == "(bin)" {
 			// Get the index of the previous token
 			previousTokenIndex := i - 1
@@ -37,6 +40,40 @@ func handleHexAndBin(tokens []string) []string {
 				// Remove the (hex) or (bin) markers from the slice
 				tokens = append(tokens[:i], tokens[i+1:]...)
 				// Decrement index since we removed an element
+				i--
+			}
+		}
+	}
+	return tokens
+}
+
+func handleUpLowCap(tokens []string) []string {
+	//iterate through all token
+	for i := 0; i < len(tokens); i++ {
+		currentToken := tokens[i]
+		//check if current token is lowercase or uppercase or capitalize conversion marker
+		if currentToken == "(up)" || currentToken == "(low)" || currentToken == "(cap)" {
+			//get the index of the previous token
+			previousTokenIndex := i - 1
+			//ensure a previous token exists
+			if previousTokenIndex >= 0 {
+				previousToken := tokens[previousTokenIndex]
+				var newPreviousToken string
+				if currentToken == "(up)" {
+					//convert to uppercase
+					newPreviousToken = strings.ToUpper(previousToken)
+				} else if currentToken == "(low)" {
+					//convert to lower case
+					newPreviousToken = strings.ToLower(previousToken)
+				} else if currentToken == "(cap)" {
+					//capitalize
+					newPreviousToken = capitalize(previousToken)
+				}
+				//replace the previous token with the the new token
+				tokens[previousTokenIndex] = newPreviousToken
+				//remove the (up) or (low) or (cap) markers from the slice
+				tokens = append(tokens[:i], tokens[i+1:]...)
+				//Decrement the index since we removed an element
 				i--
 			}
 		}
