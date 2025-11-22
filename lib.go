@@ -23,6 +23,10 @@ func handleHexAndBin(tokens []string) []string {
 					num, err = strconv.ParseInt(previousToken, 16, 64)
 					// Skip conversion if the string is not valid hexadecimal
 					if err != nil {
+						// Remove the (hex) or (bin) markers from the slice
+						tokens = append(tokens[:i], tokens[i+1:]...)
+						// Decrement index since we removed an element
+						i--
 						continue
 					}
 				} else if currentToken == "(bin)" {
@@ -30,6 +34,10 @@ func handleHexAndBin(tokens []string) []string {
 					num, err = strconv.ParseInt(previousToken, 2, 64)
 					// Skip conversion if the string is not valid binary
 					if err != nil {
+						// Remove the (hex) or (bin) markers from the slice
+						tokens = append(tokens[:i], tokens[i+1:]...)
+						// Decrement index since we removed an element
+						i--
 						continue
 					}
 				}
@@ -37,11 +45,11 @@ func handleHexAndBin(tokens []string) []string {
 				newPreviousToken := strconv.FormatInt(num, 10)
 				// Replace the hexadecimal or binary string with decimal string
 				tokens[previousTokenIndex] = newPreviousToken
-				// Remove the (hex) or (bin) markers from the slice
-				tokens = append(tokens[:i], tokens[i+1:]...)
-				// Decrement index since we removed an element
-				i--
 			}
+			// Remove the (hex) or (bin) markers from the slice
+			tokens = append(tokens[:i], tokens[i+1:]...)
+			// Decrement index since we removed an element
+			i--
 		}
 	}
 	return tokens
@@ -67,15 +75,16 @@ func handleUpLowCap(tokens []string) []string {
 					newPreviousToken = strings.ToLower(previousToken)
 				} else if currentToken == "(cap)" {
 					//capitalize
-					newPreviousToken = capitalize(previousToken)
+					newPreviousToken = Capitalize(previousToken)
 				}
-				//replace the previous token with the the new token
+				//replace the previous token with the new token
 				tokens[previousTokenIndex] = newPreviousToken
-				//remove the (up) or (low) or (cap) markers from the slice
-				tokens = append(tokens[:i], tokens[i+1:]...)
-				//Decrement the index since we removed an element
-				i--
 			}
+			//remove the (up) or (low) or (cap) markers from the slice
+			tokens = append(tokens[:i], tokens[i+1:]...)
+			//Decrement the index since we removed an element
+			i--
+
 		}
 	}
 	return tokens

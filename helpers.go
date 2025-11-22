@@ -4,7 +4,7 @@ import (
 	"unicode"
 )
 
-func capitalize(str string) string {
+func Capitalize(str string) string {
 	if len(str) == 0 {
 		return ""
 	}
