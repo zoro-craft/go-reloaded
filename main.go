@@ -54,5 +54,11 @@ func main() {
 			linesUpLowCapHandled = append(linesUpLowCapHandled, handleUpLowCap(lineTokens))
 		}
 		fmt.Println(linesUpLowCapHandled)
+		// process the numbered uppercase and lowercase and capitalize conversions
+		linesNumberedUpLowCapHandled := [][]string{}
+		for _, lineTokens := range linesUpLowCapHandled {
+			linesNumberedUpLowCapHandled = append(linesNumberedUpLowCapHandled, handleNumberedUpLowCap(lineTokens))
+		}
+		fmt.Println(linesNumberedUpLowCapHandled)
 	}
 }

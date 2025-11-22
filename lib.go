@@ -6,49 +6,49 @@ import (
 )
 
 func handleHexAndBin(tokens []string) []string {
-	// Iterate through all tokens
+	// iterate through all tokens
 	for i := 0; i < len(tokens); i++ {
 		currentToken := tokens[i]
-		// Check if current token is a hexadecimal or binary conversion marker
+		// check if current token is a hexadecimal or binary conversion marker
 		if currentToken == "(hex)" || currentToken == "(bin)" {
-			// Get the index of the previous token
+			// get the index of the previous token
 			previousTokenIndex := i - 1
-			// Ensure a previous token exists
+			// ensure a previous token exists
 			if previousTokenIndex >= 0 {
 				previousToken := tokens[previousTokenIndex]
 				var num int64
 				var err error
 				if currentToken == "(hex)" {
-					// Convert hexadecimal string to decimal integer
+					// convert hexadecimal string to decimal integer
 					num, err = strconv.ParseInt(previousToken, 16, 64)
-					// Skip conversion if the string is not valid hexadecimal
+					// skip conversion if the string is not valid hexadecimal
 					if err != nil {
-						// Remove the (hex) or (bin) markers from the slice
+						// remove the (hex) or (bin) markers from the slice
 						tokens = append(tokens[:i], tokens[i+1:]...)
-						// Decrement index since we removed an element
+						// decrement index since we removed an element
 						i--
 						continue
 					}
 				} else if currentToken == "(bin)" {
-					// Convert binary string to decimal integer
+					// convert binary string to decimal integer
 					num, err = strconv.ParseInt(previousToken, 2, 64)
-					// Skip conversion if the string is not valid binary
+					// skip conversion if the string is not valid binary
 					if err != nil {
-						// Remove the (hex) or (bin) markers from the slice
+						// remove the (hex) or (bin) markers from the slice
 						tokens = append(tokens[:i], tokens[i+1:]...)
-						// Decrement index since we removed an element
+						// decrement index since we removed an element
 						i--
 						continue
 					}
 				}
-				// Convert decimal integer back to string
+				// cnvert decimal integer back to string
 				newPreviousToken := strconv.FormatInt(num, 10)
-				// Replace the hexadecimal or binary string with decimal string
+				// replace the hexadecimal or binary string with decimal string
 				tokens[previousTokenIndex] = newPreviousToken
 			}
-			// Remove the (hex) or (bin) markers from the slice
+			// remove the (hex) or (bin) markers from the slice
 			tokens = append(tokens[:i], tokens[i+1:]...)
-			// Decrement index since we removed an element
+			// decrement index since we removed an element
 			i--
 		}
 	}
@@ -67,13 +67,14 @@ func handleUpLowCap(tokens []string) []string {
 			if previousTokenIndex >= 0 {
 				previousToken := tokens[previousTokenIndex]
 				var newPreviousToken string
-				if currentToken == "(up)" {
+				switch currentToken {
+				case "(up)":
 					//convert to uppercase
 					newPreviousToken = strings.ToUpper(previousToken)
-				} else if currentToken == "(low)" {
+				case "(low)":
 					//convert to lower case
 					newPreviousToken = strings.ToLower(previousToken)
-				} else if currentToken == "(cap)" {
+				case "(cap)":
 					//capitalize
 					newPreviousToken = Capitalize(previousToken)
 				}
@@ -82,9 +83,54 @@ func handleUpLowCap(tokens []string) []string {
 			}
 			//remove the (up) or (low) or (cap) markers from the slice
 			tokens = append(tokens[:i], tokens[i+1:]...)
-			//Decrement the index since we removed an element
+			//decrement the index since we removed an element
 			i--
+		}
+	}
+	return tokens
+}
 
+func handleNumberedUpLowCap(tokens []string) []string {
+	for i := 0; i < len(tokens); i++ {
+		token := tokens[i]
+		// check for marker start
+		if token == "(up," || token == "(low," || token == "(cap," {
+			// check next token is valid
+			if i+1 < len(tokens) && strings.HasSuffix(tokens[i+1], ")") {
+				rawNumber := strings.TrimSuffix(tokens[i+1], ")")
+				count, err := strconv.Atoi(rawNumber)
+				// only process if its a valid positive number
+				if err == nil {
+					//handle if count is negative or zero
+					if count <= 0 {
+						// remove the tag start and end
+						tokens = append(tokens[:i], tokens[i+2:]...)
+						// decrement index since we removed two elements
+						i--
+						continue
+					}
+					// handle if count is bigger than available words
+					startIndex := i - count
+					if startIndex < 0 {
+						startIndex = 0
+					}
+					// loop over the tokens and convert
+					for j := startIndex; j < i; j++ {
+						switch token {
+						case "(up,":
+							tokens[j] = strings.ToUpper(tokens[j])
+						case "(low,":
+							tokens[j] = strings.ToLower(tokens[j])
+						case "(cap,":
+							tokens[j] = Capitalize(tokens[j])
+						}
+					}
+					// remove the tag and the number
+					tokens = append(tokens[:i], tokens[i+2:]...)
+					// decrement i  so we don't skip the next word
+					i--
+				}
+			}
 		}
 	}
 	return tokens
