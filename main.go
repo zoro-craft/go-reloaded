@@ -59,9 +59,14 @@ func main() {
 		for _, lineTokens := range linesUpLowCapHandled {
 			linesNumberedUpLowCapHandled = append(linesNumberedUpLowCapHandled, handleNumberedUpLowCap(lineTokens))
 		}
+		//process the punctuations
+		handledPunctuation := [][]string{}
+		for _, lineTokens := range linesNumberedUpLowCapHandled {
+			handledPunctuation = append(handledPunctuation, handlePunctuation(lineTokens))
+		}
 		//current process
 		finalTextLines := []string{}
-		for _, token := range linesNumberedUpLowCapHandled {
+		for _, token := range handledPunctuation {
 			str := strings.Join(token, " ")
 			finalTextLines = append(finalTextLines, str)
 		}

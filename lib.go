@@ -138,3 +138,52 @@ func handleNumberedUpLowCap(tokens []string) []string {
 	}
 	return tokens
 }
+
+func handlePunctuation(tokens []string) []string {
+	//iterate through all tokens
+	punctuations := []rune{'.', ',', '!', '?', ':', ';'}
+	for i := 0; i < len(tokens); i++ {
+		currentToken := tokens[i]
+		//iterate through each token
+		currentTokenRunes := []rune(currentToken)
+		for j := 0; j < len(currentTokenRunes); j++ {
+			char := currentTokenRunes[j]
+			//check if character is a punctuation
+			isPunctuation := false
+			for _, punctuation := range punctuations {
+				if char == punctuation {
+					isPunctuation = true
+					break
+				}
+			}
+			if isPunctuation {
+				//ensure a previous token exists
+				if i-1 >= 0 {
+					//add the punctuation to the previous token
+					tokens[i-1] = tokens[i-1] + string(char)
+				} else {
+					//create a new token at the beginning of tokens
+					newToken := string(char)
+					tokens = append([]string{newToken}, tokens...)
+					//increment the index since we added an element
+					i++
+				}
+				//remove the punctuation from the current runes slice and update the current token value
+				currentTokenRunes = append(currentTokenRunes[:j], currentTokenRunes[j+1:]...)
+				tokens[i] = string(currentTokenRunes)
+				//decrement the index since we removed an element
+				j--
+			} else {
+				break
+			}
+		}
+		//remove current token if it becomes empty
+		if tokens[i] == "" {
+			tokens = append(tokens[:i], tokens[i+1:]...)
+			//decrement the index since we removed an element
+			i--
+		}
+
+	}
+	return tokens
+}
