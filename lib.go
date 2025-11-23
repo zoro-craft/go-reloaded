@@ -41,7 +41,7 @@ func handleHexAndBin(tokens []string) []string {
 						continue
 					}
 				}
-				// cnvert decimal integer back to string
+				// convert decimal integer back to string
 				newPreviousToken := strconv.FormatInt(num, 10)
 				// replace the hexadecimal or binary string with decimal string
 				tokens[previousTokenIndex] = newPreviousToken
@@ -56,7 +56,7 @@ func handleHexAndBin(tokens []string) []string {
 }
 
 func handleUpLowCap(tokens []string) []string {
-	//iterate through all token
+	//iterate through all tokens
 	for i := 0; i < len(tokens); i++ {
 		currentToken := tokens[i]
 		//check if current token is lowercase or uppercase or capitalize conversion marker
@@ -95,7 +95,7 @@ func handleNumberedUpLowCap(tokens []string) []string {
 		token := tokens[i]
 		// check for marker start
 		if token == "(up," || token == "(low," || token == "(cap," {
-			// check next token is valid
+			// check if next token is valid
 			if i+1 < len(tokens) && strings.HasSuffix(tokens[i+1], ")") {
 				rawNumber := strings.TrimSuffix(tokens[i+1], ")")
 				count, err := strconv.Atoi(rawNumber)
@@ -127,7 +127,7 @@ func handleNumberedUpLowCap(tokens []string) []string {
 					}
 					// remove the tag and the number
 					tokens = append(tokens[:i], tokens[i+2:]...)
-					// decrement i  so we don't skip the next word
+					// decrement i since we removed two elements
 					i--
 				}
 			}

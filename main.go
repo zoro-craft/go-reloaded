@@ -7,9 +7,9 @@ import (
 )
 
 func main() {
-	// --------- Validate Command Line Arguments ---------
+	// --------- validate command line arguments ---------
 
-	// Ensure both input and output file names are provided
+	// ensure both input and output file names are provided
 	if len(os.Args) == 1 {
 		fmt.Println("input and output files names missing")
 		return
@@ -19,30 +19,30 @@ func main() {
 		return
 	}
 	if len(os.Args) == 3 {
-		// Extract input and output file names from arguments
+		// extract input and output file names from arguments
 		inputFile := os.Args[1]
 		// outputFile := os.Args[2]
 
-		// --------- Read Input File ---------
-		// Read the entire file content as bytes
+		// --------- read input file ---------
+		// read the entire file content as bytes
 		content, err := os.ReadFile(inputFile)
 		if err != nil {
 			fmt.Println("file does not exist")
 			return
 		}
-		// Convert file content from bytes to string
+		// convert file content from bytes to string
 		text := string(content)
-		// --------- Tokenize Text ---------
-		// Split content into individual lines
+		// --------- tokenize text ---------
+		// split content into individual lines
 		lines := strings.Split(text, "\n")
-		// Split each line into words (tokens)
+		// split each line into words (tokens)
 		linesTokens := [][]string{}
 		for _, line := range lines {
 			tokens := strings.Fields(line)
 			linesTokens = append(linesTokens, tokens)
 		}
-		// --------- Process Tokens ---------
-		// Process hexadecimal and binary conversions
+		// --------- process tokens ---------
+		// process hexadecimal and binary conversions
 		linesTokensHexBinHandled := [][]string{}
 		for _, lineTokens := range linesTokens {
 			linesTokensHexBinHandled = append(linesTokensHexBinHandled, handleHexAndBin(lineTokens))
