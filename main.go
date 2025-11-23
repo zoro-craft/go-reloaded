@@ -21,7 +21,7 @@ func main() {
 	if len(os.Args) == 3 {
 		// extract input and output file names from arguments
 		inputFile := os.Args[1]
-		// outputFile := os.Args[2]
+		outputFile := os.Args[2]
 
 		// --------- read input file ---------
 		// read the entire file content as bytes
@@ -47,18 +47,26 @@ func main() {
 		for _, lineTokens := range linesTokens {
 			linesTokensHexBinHandled = append(linesTokensHexBinHandled, handleHexAndBin(lineTokens))
 		}
-		fmt.Println(linesTokensHexBinHandled)
+		//fmt.Println(linesTokensHexBinHandled)
 		// process the simple uppercase and lowercase and capitalize conversions
 		linesUpLowCapHandled := [][]string{}
 		for _, lineTokens := range linesTokensHexBinHandled {
 			linesUpLowCapHandled = append(linesUpLowCapHandled, handleUpLowCap(lineTokens))
 		}
-		fmt.Println(linesUpLowCapHandled)
+		//fmt.Println(linesUpLowCapHandled)
 		// process the numbered uppercase and lowercase and capitalize conversions
 		linesNumberedUpLowCapHandled := [][]string{}
 		for _, lineTokens := range linesUpLowCapHandled {
 			linesNumberedUpLowCapHandled = append(linesNumberedUpLowCapHandled, handleNumberedUpLowCap(lineTokens))
 		}
-		fmt.Println(linesNumberedUpLowCapHandled)
+		//current process
+		finalTextLines := []string{}
+		for _, token := range linesNumberedUpLowCapHandled {
+			str := strings.Join(token, " ")
+			finalTextLines = append(finalTextLines, str)
+		}
+		finalText := strings.Join(finalTextLines, "\n")
+		fmt.Println(finalText)
+		os.WriteFile(outputFile, []byte(finalText), 0644)
 	}
 }
