@@ -17,3 +17,12 @@ func Capitalize(str string) string {
 	newStr := string(chars)
 	return newStr
 }
+
+func isWord(str string) bool {
+	for _, char := range str {
+		if unicode.IsLetter(char) || unicode.IsNumber(char) {
+			return true
+		}
+	}
+	return false
+}

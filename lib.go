@@ -12,10 +12,13 @@ func handleHexAndBin(tokens []string) []string {
 		// check if current token is a hexadecimal or binary conversion marker
 		if currentToken == "(hex)" || currentToken == "(bin)" {
 			// get the index of the previous token
-			previousTokenIndex := i - 1
-			// ensure a previous token exists
-			if previousTokenIndex >= 0 {
-				previousToken := tokens[previousTokenIndex]
+			indexToProcess := i - 1
+			// go back the previous token if its not a word
+			for indexToProcess >= 0 && !isWord(tokens[indexToProcess]) {
+				indexToProcess--
+			}
+			if indexToProcess >= 0 {
+				previousToken := tokens[indexToProcess]
 				var num int64
 				var err error
 				if currentToken == "(hex)" {
@@ -44,7 +47,7 @@ func handleHexAndBin(tokens []string) []string {
 				// convert decimal integer back to string
 				newPreviousToken := strconv.FormatInt(num, 10)
 				// replace the hexadecimal or binary string with decimal string
-				tokens[previousTokenIndex] = newPreviousToken
+				tokens[indexToProcess] = newPreviousToken
 			}
 			// remove the (hex) or (bin) markers from the slice
 			tokens = append(tokens[:i], tokens[i+1:]...)
@@ -62,10 +65,14 @@ func handleUpLowCap(tokens []string) []string {
 		//check if current token is lowercase or uppercase or capitalize conversion marker
 		if currentToken == "(up)" || currentToken == "(low)" || currentToken == "(cap)" {
 			//get the index of the previous token
-			previousTokenIndex := i - 1
+			indexToProcess := i - 1
+			//go back the previous token if its not a word
+			for indexToProcess >= 0 && !isWord(tokens[indexToProcess]) {
+				indexToProcess--
+			}
 			//ensure a previous token exists
-			if previousTokenIndex >= 0 {
-				previousToken := tokens[previousTokenIndex]
+			if indexToProcess >= 0 {
+				previousToken := tokens[indexToProcess]
 				var newPreviousToken string
 				switch currentToken {
 				case "(up)":
@@ -79,7 +86,7 @@ func handleUpLowCap(tokens []string) []string {
 					newPreviousToken = Capitalize(previousToken)
 				}
 				//replace the previous token with the new token
-				tokens[previousTokenIndex] = newPreviousToken
+				tokens[indexToProcess] = newPreviousToken
 			}
 			//remove the (up) or (low) or (cap) markers from the slice
 			tokens = append(tokens[:i], tokens[i+1:]...)
@@ -101,21 +108,16 @@ func handleNumberedUpLowCap(tokens []string) []string {
 				count, err := strconv.Atoi(rawNumber)
 				// only process if its a valid positive number
 				if err == nil {
-					//handle if count is negative or zero
-					if count <= 0 {
-						// remove the tag start and end
-						tokens = append(tokens[:i], tokens[i+2:]...)
-						// decrement index since we removed two elements
-						i--
-						continue
-					}
-					// handle if count is bigger than available words
-					startIndex := i - count
-					if startIndex < 0 {
-						startIndex = 0
-					}
 					// loop over the tokens and convert
-					for j := startIndex; j < i; j++ {
+					for j := i - 1; count > 0; j-- {
+						//ensure index is higher than or equals 0
+						if j < 0 {
+							break
+						}
+						//ensure the token is a word
+						if !isWord(tokens[j]) {
+							continue
+						}
 						switch token {
 						case "(up,":
 							tokens[j] = strings.ToUpper(tokens[j])
@@ -124,6 +126,7 @@ func handleNumberedUpLowCap(tokens []string) []string {
 						case "(cap,":
 							tokens[j] = Capitalize(tokens[j])
 						}
+						count--
 					}
 					// remove the tag and the number
 					tokens = append(tokens[:i], tokens[i+2:]...)
