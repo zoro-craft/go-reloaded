@@ -191,34 +191,51 @@ func handlePunctuation(tokens []string) []string {
 func handleQuotes(tokens []string) []string {
 	//define a quote position
 	isOpeningQuote := true
+	isAltered := false
 	//iterate through all tokens
 	for i := 0; i < len(tokens); i++ {
 		currentToken := tokens[i]
-		//check if the current token is a quote and position is first
-		if strings.HasSuffix(currentToken, "'") && isOpeningQuote {
-			//ensure a next token exists
-			if i+1 < len(tokens) {
-				//add the quote to the next token
-				tokens[i+1] = "'" + tokens[i+1]
-
+		//
+		if strings.HasSuffix(currentToken, "'") {
+			if isOpeningQuote {
+				//ensure a next token exists
+				if i+1 < len(tokens) {
+					//add the quote to the next token
+					tokens[i+1] = "'" + tokens[i+1]
+					//remove the quote from the current token
+					tokens[i] = strings.TrimSuffix(tokens[i], "'")
+					isAltered = true
+					isOpeningQuote = false
+				}
+			} else {
+				isOpeningQuote = true
 			}
 		}
-		//check if the current token ends with ' and position is second
-		if strings.HasPrefix(currentToken, "'") && !isOpeningQuote {
-			//ensure a previous token exists
-			if i-1 >= 0 {
-				//add the quote to the previous token
-				tokens[i-1] = tokens[i-1] + "'"
-				//remove the quote from the current token
-				tokens[i] = strings.TrimPrefix(tokens[i], "'")
+		//
+		if strings.HasPrefix(currentToken, "'") {
+			if isAltered {
+				isOpeningQuote = !isOpeningQuote
+				isAltered = false
+			}
+			if !isOpeningQuote {
+				//ensure a previous token exists
+				if i-1 >= 0 {
+					//add the quote to the previous token
+					tokens[i-1] = tokens[i-1] + "'"
+					//remove the quote from the current token
+					tokens[i] = strings.TrimPrefix(tokens[i], "'")
+					isOpeningQuote = true
+				}
+			} else {
+				isOpeningQuote = false
 			}
 		}
 		//remove the current token if it became empty
 		if tokens[i] == "" {
 			tokens = append(tokens[:i], tokens[i+1:]...)
+			//decrement index since we removed an element
+			i--
 		}
-		//decrement index since we removed an element
-		i--
 	}
 	return tokens
 }
