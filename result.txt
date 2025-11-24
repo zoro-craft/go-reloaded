@@ -1,4 +1,23 @@
-it was the best of times, it was the worst of TIMES, it was the age of wisdom, It Was The Age Of Foolishness, it was the epoch of belief, it was the epoch of incredulity(cap) it was the season of Light, it was the season of darkness, it was the spring of hope, it was the winter of despair.
-30 files were added" "30 files were added
+it don't was the best of times, it WAS THE WORST OF TIMES, it was the age of wisdom, It Was The Age Of Foolishness, it was the epoch of belief, it was the epoch of incredulity(cap) it was the season of Light, it was the season of darkness, it was the spring of hope, it was the winter of despair.
+, files were added" "30 files were added
 1E... DD
 ... Hello
+' hello ''' kk
+
+'
+hello
+'''
+kk
+
+'hello'
+''
+kk
+cap cap (cap, 2),
+'hello' '' kk
+hello (cap, )
+
+ana ayman (up )
+
+zczc cv bvh, vv
+
+hi''' 'files -> hi'''' files

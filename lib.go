@@ -189,13 +189,36 @@ func handlePunctuation(tokens []string) []string {
 }
 
 func handleQuotes(tokens []string) []string {
-	//define a quotes toggle
-	quotesStatus := "closed"
+	//define a quote position
+	isOpeningQuote := true
 	//iterate through all tokens
 	for i := 0; i < len(tokens); i++ {
-		currentToken := 
-		//iterate through each token
-		
+		currentToken := tokens[i]
+		//check if the current token is a quote and position is first
+		if strings.HasSuffix(currentToken, "'") && isOpeningQuote {
+			//ensure a next token exists
+			if i+1 < len(tokens) {
+				//add the quote to the next token
+				tokens[i+1] = "'" + tokens[i+1]
+
+			}
+		}
+		//check if the current token ends with ' and position is second
+		if strings.HasPrefix(currentToken, "'") && !isOpeningQuote {
+			//ensure a previous token exists
+			if i-1 >= 0 {
+				//add the quote to the previous token
+				tokens[i-1] = tokens[i-1] + "'"
+				//remove the quote from the current token
+				tokens[i] = strings.TrimPrefix(tokens[i], "'")
+			}
+		}
+		//remove the current token if it became empty
+		if tokens[i] == "" {
+			tokens = append(tokens[:i], tokens[i+1:]...)
+		}
+		//decrement index since we removed an element
+		i--
 	}
-	return nil
+	return tokens
 }
