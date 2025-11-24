@@ -187,3 +187,15 @@ func handlePunctuation(tokens []string) []string {
 	}
 	return tokens
 }
+
+func handleQuotes(tokens []string) []string {
+	//define a quotes toggle
+	quotesStatus := "closed"
+	//iterate through all tokens
+	for i := 0; i < len(tokens); i++ {
+		currentToken := 
+		//iterate through each token
+		
+	}
+	return nil
+}

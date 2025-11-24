@@ -2,3 +2,15 @@ it  was the best of times, it was the worst of times (up) , it was the age of wi
 1E (hex) files were added" "30 files were added
 1E ...dd (up, 3)
 ... Hello
+' hello ''' kk
+
+'
+hello
+'''
+kk
+
+'hello'
+''
+kk
+
+'hello' '' kk
