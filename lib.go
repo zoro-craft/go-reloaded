@@ -198,7 +198,8 @@ func handlePunctuation(tokens []string) []string {
 					firstToken := currentTokenRunes[:j]
 					secondToken := currentTokenRunes[j:]
 					//remove current token from tokens and add firstToken and secondToken to tokens
-					tokens = append(tokens[:i], append([]string{string(firstToken), string(secondToken)}, tokens[i+1:]...)...)
+					tempSlice := append([]string{string(firstToken), string(secondToken)}, tokens[i+1:]...)
+					tokens = append(tokens[:i], tempSlice...)
 					break
 				}
 			}
