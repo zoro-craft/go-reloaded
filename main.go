@@ -45,33 +45,41 @@ func main() {
 		// process hexadecimal and binary conversions
 		linesTokensHexBinHandled := [][]string{}
 		for _, lineTokens := range linesTokens {
-			linesTokensHexBinHandled = append(linesTokensHexBinHandled, handleHexAndBin(lineTokens))
+			copyLine := append([]string{}, lineTokens...)
+			linesTokensHexBinHandled = append(linesTokensHexBinHandled, handleHexAndBin(copyLine))
 		}
-		//fmt.Println(linesTokensHexBinHandled)
+		fmt.Println("linesUpLowCapHandled", linesTokensHexBinHandled)
 		// process the simple uppercase and lowercase and capitalize conversions
 		linesUpLowCapHandled := [][]string{}
 		for _, lineTokens := range linesTokensHexBinHandled {
-			linesUpLowCapHandled = append(linesUpLowCapHandled, handleUpLowCap(lineTokens))
+			copyLine := append([]string{}, lineTokens...)
+			linesUpLowCapHandled = append(linesUpLowCapHandled, handleUpLowCap(copyLine))
 		}
-		//fmt.Println(linesUpLowCapHandled)
+		fmt.Println("linesUpLowCapHandled", linesUpLowCapHandled)
 		// process the numbered uppercase and lowercase and capitalize conversions
 		linesNumberedUpLowCapHandled := [][]string{}
 		for _, lineTokens := range linesUpLowCapHandled {
-			linesNumberedUpLowCapHandled = append(linesNumberedUpLowCapHandled, handleNumberedUpLowCap(lineTokens))
+			copyLine := append([]string{}, lineTokens...)
+			linesNumberedUpLowCapHandled = append(linesNumberedUpLowCapHandled, handleNumberedUpLowCap(copyLine))
 		}
+		fmt.Println("linesNumberedUpLowCapHandled", linesNumberedUpLowCapHandled)
 		//process the punctuations
 		handledPunctuation := [][]string{}
 		for _, lineTokens := range linesNumberedUpLowCapHandled {
-			handledPunctuation = append(handledPunctuation, handlePunctuation(lineTokens))
+			copyLine := append([]string{}, lineTokens...)
+			handledPunctuation = append(handledPunctuation, handlePunctuation(copyLine))
 		}
+		fmt.Println("handledPunctuation", handledPunctuation)
+
 		//process the quotes
 		handledQuotes := [][]string{}
-		for _, linesTokens := range handledPunctuation {
-			handledQuotes = append(handledQuotes, handleQuotes(linesTokens))
+		for _, lineTokens := range handledPunctuation {
+			copyLine := append([]string{}, lineTokens...)
+			handledQuotes = append(handledQuotes, handleQuotes(copyLine))
 		}
 		//current process
 		finalTextLines := []string{}
-		for _, token := range handledQuotes {
+		for _, token := range handledPunctuation {
 			str := strings.Join(token, " ")
 			finalTextLines = append(finalTextLines, str)
 		}
