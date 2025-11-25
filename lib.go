@@ -183,59 +183,76 @@ func handlePunctuation(tokens []string) []string {
 			//decrement the index since we removed an element
 			i--
 		}
-
+	}
+	//clean up function
+	for i := 0; i < len(tokens); i++ {
+		currentTokenRunes := []rune(tokens[i])
+		//iterate through the current token\
+		for j := 0; j < len(currentTokenRunes); j++ {
+			char := currentTokenRunes[j]
+			//check if it's a normal character
+			if !isPunctuation(char) {
+				//ensure a previous token exists and is a punctuation
+				if j-1 >= 0 && isPunctuation(currentTokenRunes[j-1]) {
+					//split the current token into 2 tokens
+					firstToken := currentTokenRunes[:j]
+					secondToken := currentTokenRunes[j:]
+					//remove current token from tokens and add firstToken and secondToken to tokens
+					tokens = append(tokens[:i], append([]string{string(firstToken), string(secondToken)}, tokens[i+1:]...)...)
+					break
+				}
+			}
+		}
 	}
 	return tokens
 }
 
 func handleQuotes(tokens []string) []string {
-	//define a quote position
-	isOpeningQuote := true
-	isAltered := false
-	//iterate through all tokens
+	quoteCount := 0
+
 	for i := 0; i < len(tokens); i++ {
 		currentToken := tokens[i]
-		//
-		if strings.HasSuffix(currentToken, "'") {
-			if isOpeningQuote {
-				//ensure a next token exists
+
+		// Check if token contains single quote(s)
+		if !strings.Contains(currentToken, "'") {
+			continue
+		}
+
+		// Process each quote in the current token
+		for strings.Contains(tokens[i], "'") {
+			quoteCount++
+
+			if quoteCount%2 == 1 {
+				// Odd quote - opening quote (attach to next word)
 				if i+1 < len(tokens) {
-					//add the quote to the next token
+					// Add quote to beginning of next token
 					tokens[i+1] = "'" + tokens[i+1]
-					//remove the quote from the current token
-					tokens[i] = strings.TrimSuffix(tokens[i], "'")
-					isAltered = true
-					isOpeningQuote = false
+					// Remove quote from current token
+					tokens[i] = strings.Replace(tokens[i], "'", "", 1)
+				} else {
+					// No next token, just remove the quote
+					tokens[i] = strings.Replace(tokens[i], "'", "", 1)
 				}
 			} else {
-				isOpeningQuote = true
-			}
-		}
-		//
-		if strings.HasPrefix(currentToken, "'") {
-			if isAltered {
-				isOpeningQuote = !isOpeningQuote
-				isAltered = false
-			}
-			if !isOpeningQuote {
-				//ensure a previous token exists
-				if i-1 >= 0 {
-					//add the quote to the previous token
+				// Even quote - closing quote (attach to previous word)
+				if i > 0 {
+					// Add quote to end of previous token
 					tokens[i-1] = tokens[i-1] + "'"
-					//remove the quote from the current token
-					tokens[i] = strings.TrimPrefix(tokens[i], "'")
-					isOpeningQuote = true
+					// Remove quote from current token
+					tokens[i] = strings.Replace(tokens[i], "'", "", 1)
+				} else {
+					// No previous token, just remove the quote
+					tokens[i] = strings.Replace(tokens[i], "'", "", 1)
 				}
-			} else {
-				isOpeningQuote = false
 			}
 		}
-		//remove the current token if it became empty
+
+		// Remove token if it became empty
 		if tokens[i] == "" {
 			tokens = append(tokens[:i], tokens[i+1:]...)
-			//decrement index since we removed an element
 			i--
 		}
 	}
+
 	return tokens
 }
