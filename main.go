@@ -84,7 +84,7 @@ func main() {
 			finalTextLines = append(finalTextLines, str)
 		}
 		finalText := strings.Join(finalTextLines, "\n")
-		fmt.Println(finalText)
+		//fmt.Println(finalText)
 		os.WriteFile(outputFile, []byte(finalText), 0644)
 	}
 }
