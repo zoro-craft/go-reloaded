@@ -79,7 +79,7 @@ func main() {
 		}
 		//current process
 		finalTextLines := []string{}
-		for _, token := range handledPunctuation {
+		for _, token := range handledQuotes {
 			str := strings.Join(token, " ")
 			finalTextLines = append(finalTextLines, str)
 		}

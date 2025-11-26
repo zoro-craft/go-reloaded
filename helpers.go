@@ -26,3 +26,15 @@ func isWord(str string) bool {
 	}
 	return false
 }
+
+func isPunctuation(char rune) bool {
+	punctuations := []rune{'.', ',', '!', '?', ':', ';'}
+	isPunctuation := false
+	for _, punctuation := range punctuations {
+		if char == punctuation {
+			return true
+			break
+		}
+	}
+	return isPunctuation
+}
