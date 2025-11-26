@@ -27,13 +27,19 @@ func isWord(str string) bool {
 	return false
 }
 
+func isWordChar(char rune) bool {
+	if unicode.IsLetter(char) || unicode.IsDigit(char) {
+		return true
+	}
+	return false
+}
+
 func isPunctuation(char rune) bool {
 	punctuations := []rune{'.', ',', '!', '?', ':', ';'}
 	isPunctuation := false
 	for _, punctuation := range punctuations {
 		if char == punctuation {
 			return true
-			break
 		}
 	}
 	return isPunctuation

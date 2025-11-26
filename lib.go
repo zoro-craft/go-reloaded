@@ -208,52 +208,116 @@ func handlePunctuation(tokens []string) []string {
 	return tokens
 }
 
-func handleQuotes(tokens []string) []string {
-	quoteCount := 0
-
-	for i := 0; i < len(tokens); i++ {
-		currentToken := tokens[i]
-
-		// Check if token contains single quote(s)
-		if !strings.Contains(currentToken, "'") {
-			continue
-		}
-
-		// Process each quote in the current token
-		for strings.Contains(tokens[i], "'") {
-			quoteCount++
-
-			if quoteCount%2 == 1 {
-				// Odd quote - opening quote (attach to next word)
-				if i+1 < len(tokens) {
-					// Add quote to beginning of next token
-					tokens[i+1] = "'" + tokens[i+1]
-					// Remove quote from current token
-					tokens[i] = strings.Replace(tokens[i], "'", "", 1)
+/* func handleQuotes(tokens []string) []string {
+	//join with space
+	strRunes := []rune(strings.Join(tokens, " "))
+	for i := 0; i < len(strRunes); i++ {
+		//if its a quote
+		if strRunes[i] == '\'' {
+			//ensure it's not in the middle of a word
+			if !((i-1 >= 0 && isWordChar(strRunes[i-1])) && (i+1 < len(strRunes) && isWordChar(strRunes[i+1]))) {
+				//search for it's next pair
+				//if there is no next char break
+				if i+1 >= len(strRunes) {
+					break
 				} else {
-					// No next token, just remove the quote
-					tokens[i] = strings.Replace(tokens[i], "'", "", 1)
-				}
-			} else {
-				// Even quote - closing quote (attach to previous word)
-				if i > 0 {
-					// Add quote to end of previous token
-					tokens[i-1] = tokens[i-1] + "'"
-					// Remove quote from current token
-					tokens[i] = strings.Replace(tokens[i], "'", "", 1)
-				} else {
-					// No previous token, just remove the quote
-					tokens[i] = strings.Replace(tokens[i], "'", "", 1)
+					for j := i + 1; j < len(strRunes); j++ {
+						//if it's a quote
+						if strRunes[j] == '\'' {
+							//ensure it's not in the middle of a word
+							if !(i-1 >= 0 && isWordChar(strRunes[i-1])) && (i+1 < len(strRunes) && isWordChar(strRunes[i+1])) {
+								firstPart := strRunes[:i]
+								betweenQuotes := strRunes[i : j+1]
+								lastPart := strRunes[j+1:]
+								//add a space at the end of first part if there isn't one
+								if firstPart[len(firstPart)-1] != ' ' {
+									firstPart = append(firstPart, ' ')
+								}
+								//remove quotes from between quotes
+								betweenQuotes = betweenQuotes[1 : len(betweenQuotes)-1]
+								//trim space at the start and at the end of between quotes
+								betweenQuotes = []rune(strings.TrimPrefix(string(betweenQuotes), " "))
+								betweenQuotes = []rune(strings.TrimSuffix(string(betweenQuotes), " "))
+								//add a space at the start of the last part if there isn't one
+								if lastPart[0] == ' ' {
+									lastPart = append([]rune{' '}, lastPart...)
+								}
+								strRunes = []rune(string(firstPart) + string(betweenQuotes) + string(lastPart))
+								i = j + 1
+								break
+							}
+						}
+					}
 				}
 			}
 		}
+	}
+	str := string(strRunes)
+	tokens = strings.Fields(str)
+	return tokens
+} */
 
-		// Remove token if it became empty
-		if tokens[i] == "" {
-			tokens = append(tokens[:i], tokens[i+1:]...)
-			i--
+func handleQuotes(tokens []string) []string {
+	if len(tokens) == 0 {
+		return tokens
+	}
+	
+	strRunes := []rune(strings.Join(tokens, " "))
+	
+	for i := 0; i < len(strRunes); i++ {
+		// if it's a quote
+		if strRunes[i] == '\'' {
+			// ensure it's not in the middle of a word (apostrophe)
+			if !((i-1 >= 0 && isWordChar(strRunes[i-1])) && (i+1 < len(strRunes) && isWordChar(strRunes[i+1]))) {
+				// search for its closing pair
+				if i+1 >= len(strRunes) {
+					break
+				}
+				
+				foundPair := false
+				for j := i + 1; j < len(strRunes); j++ {
+					// if it's a quote
+					if strRunes[j] == '\'' {
+						// ensure it's not in the middle of a word (apostrophe)
+						if !((j-1 >= 0 && isWordChar(strRunes[j-1])) && (j+1 < len(strRunes) && isWordChar(strRunes[j+1]))) {
+							// extract the content between quotes (without the quotes themselves)
+							betweenQuotes := string(strRunes[i+1 : j])
+							
+							// trim spaces only at the start and end
+							trimmed := strings.TrimSpace(betweenQuotes)
+							
+							// Count leading and trailing spaces to remove
+							leadingSpaces := len(betweenQuotes) - len(strings.TrimLeft(betweenQuotes, " "))
+							trailingSpaces := len(betweenQuotes) - len(strings.TrimRight(betweenQuotes, " "))
+							
+							// Remove the spaces after opening quote
+							if leadingSpaces > 0 {
+								strRunes = append(strRunes[:i+1], strRunes[i+1+leadingSpaces:]...)
+								j -= leadingSpaces
+							}
+							
+							// Remove the spaces before closing quote
+							if trailingSpaces > 0 {
+								strRunes = append(strRunes[:j-trailingSpaces], strRunes[j-trailingSpaces:]...)
+								j -= trailingSpaces
+							}
+							
+							i = j
+							foundPair = true
+							break
+						}
+					}
+				}
+				
+				if !foundPair {
+					// No closing quote found, move on
+					continue
+				}
+			}
 		}
 	}
-
+	
+	str := string(strRunes)
+	tokens = strings.Fields(str)
 	return tokens
 }
