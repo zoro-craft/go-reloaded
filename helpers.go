@@ -20,7 +20,7 @@ func Capitalize(str string) string {
 
 func isWord(str string) bool {
 	for _, char := range str {
-		if unicode.IsLetter(char) || unicode.IsNumber(char) {
+		if unicode.IsLetter(char) || unicode.IsDigit(char) {
 			return true
 		}
 	}

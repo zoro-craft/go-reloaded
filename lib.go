@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
+	"unicode"
 )
 
 func handleHexAndBin(tokens []string) []string {
@@ -210,61 +210,49 @@ func handlePunctuation(tokens []string) []string {
 }
 
 func handleQuotes(tokens []string) []string {
-	//join with space
-	strRunes := []rune(strings.Join(tokens, " "))
-	fmt.Println(string(strRunes))
-	for i := 0; i < len(strRunes); i++ {
-		//if its a quote
-		if strRunes[i] == '\'' {
-			fmt.Println("first quote found", i)
-			//ensure it's not in the middle of a word
-			if !((i-1 >= 0 && isWordChar(strRunes[i-1])) && (i+1 < len(strRunes) && isWordChar(strRunes[i+1]))) {
-				fmt.Println("first quote is not in the middle of a word")
-				//search for it's next pair
-				//if there is no next char break
-				if i+1 >= len(strRunes) {
-					break
-				} else {
-					for j := i + 1; j < len(strRunes); j++ {
-						//if it's a quote
-						if strRunes[j] == '\'' {
-							fmt.Println("second quote found", j)
-							//ensure it's not in the middle of a word
-							if !((j-1 >= 0 && isWordChar(strRunes[j-1])) && (j+1 < len(strRunes) && isWordChar(strRunes[j+1]))) {
-								fmt.Println("second quote is not in the middle of a word")
-								firstPart := strRunes[:i]
-								betweenQuotes := strRunes[i : j+1]
-								lastPart := strRunes[j+1:]
-								fmt.Print("before processing: firstpart: ", string(firstPart), " between quotes: ", string(betweenQuotes), " lastpart: ", string(lastPart))
-								fmt.Println()
-								//add a space at the end of first part if there isn't one
-								if firstPart[len(firstPart)-1] != ' ' {
-									firstPart = append(firstPart, ' ')
-								}
-								//remove quotes from between quotes
-								betweenQuotes = betweenQuotes[1 : len(betweenQuotes)-1]
-								//trim space at the start and at the end of between quotes
-								betweenQuotes = []rune(strings.TrimPrefix(string(betweenQuotes), " "))
-								betweenQuotes = []rune(strings.TrimSuffix(string(betweenQuotes), " "))
-								//add quotes back
-								betweenQuotes = []rune("'" + string(betweenQuotes) + "'")
-								//add a space at the start of the last part if there isn't one
-								if lastPart[0] == ' ' {
-									lastPart = append([]rune{' '}, lastPart...)
-								}
-								fmt.Print("after processing: firstpart: ", string(firstPart), " between quotes: ", string(betweenQuotes), " lastpart: ", string(lastPart))
-
-								strRunes = []rune(string(firstPart) + string(betweenQuotes) + string(lastPart))
-								i = j + 1
-								break
-							}
+	text := strings.Join(tokens, " ")
+	result := ""
+	temp := ""
+	runes := []rune(text)
+	check := false
+	for i := 0; i < len(runes); i++ {
+		if runes[i] == '\'' {
+			if i > 0 && i < len(runes)-1 {
+				if isWordChar(runes[i+1]) && isWordChar(runes[i-1]) {
+					result += string(runes[i])
+					continue
+				}
+			}
+			if i < len(runes)-1 {
+				check = false
+				for j := i + 1; j < len(runes); j++ {
+					if runes[j] == '\'' {
+						if j < len(runes)-1 && isWordChar(runes[j-1]) && isWordChar(runes[j+1]) {
+							temp += "'"
+							continue
 						}
+						check = true
+						i = j
+						break
 					}
+					temp += string(runes[j])
+				}
+				if check {
+					temp = strings.TrimSpace(temp)
+					if len(result) > 0 && !unicode.IsSpace(rune(result[len(result)-1])) {
+						result += " "
+					}
+					result += "'" + temp + "'"
+					if i+1 < len(runes) && !unicode.IsSpace(runes[i+1]) {
+						result += " "
+					}
+					temp = ""
+					continue
 				}
 			}
 		}
+		result += string(runes[i])
 	}
-	str := string(strRunes)
-	tokens = strings.Fields(str)
+	tokens = strings.Fields(result)
 	return tokens
 }
