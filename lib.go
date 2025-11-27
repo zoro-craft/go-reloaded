@@ -258,18 +258,22 @@ func handleQuotes(tokens []string) []string {
 
 func handleVowels(tokens []string) []string {
 	for i := 0; i < len(tokens); i++ {
-		currentToken := tokens[i]
-		switch currentToken {
-		case "a":
-			if i+1 < len(tokens) && doesBeginWithVowel(tokens[i+1]) {
-				currentToken = "an"
-			}
-		case "A":
-			if i+1 < len(tokens) && doesBeginWithVowel(tokens[i+1]) {
-				currentToken = "An"
+		j := i + 1
+		for j < len(tokens) && !isWord(tokens[j]) {
+			j++
+		}
+		if j < len(tokens) && isWord(tokens[j]) {
+			switch tokens[i] {
+			case "a":
+				if doesBeginWithVowel(tokens[j]) {
+					tokens[i] = "an"
+				}
+			case "A":
+				if doesBeginWithVowel(tokens[j]) {
+					tokens[i] = "An"
+				}
 			}
 		}
-		tokens[i] = currentToken
 	}
 	return tokens
 }
