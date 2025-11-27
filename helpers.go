@@ -44,3 +44,15 @@ func isPunctuation(char rune) bool {
 	}
 	return isPunctuation
 }
+
+func doesBeginWithVowel(str string) bool {
+	strRunes := []rune(str)
+	switch strRunes[0] {
+	case 'a', 'e', 'i', 'o', 'u', 'h':
+		return true
+	case 'A', 'E', 'I', 'O', 'U', 'H':
+		return true
+	default:
+		return false
+	}
+}

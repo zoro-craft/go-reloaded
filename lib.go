@@ -3,7 +3,6 @@ package main
 import (
 	"strconv"
 	"strings"
-	"unicode"
 )
 
 func handleHexAndBin(tokens []string) []string {
@@ -239,13 +238,13 @@ func handleQuotes(tokens []string) []string {
 				}
 				if check {
 					temp = strings.TrimSpace(temp)
-					if len(result) > 0 && !unicode.IsSpace(rune(result[len(result)-1])) {
+					/* 					if len(result) > 0 && !unicode.IsSpace(rune(result[len(result)-1])) {
 						result += " "
-					}
+					} */
 					result += "'" + temp + "'"
-					if i+1 < len(runes) && !unicode.IsSpace(runes[i+1]) {
+					/* 					if i+1 < len(runes) && !unicode.IsSpace(runes[i+1]) {
 						result += " "
-					}
+					} */
 					temp = ""
 					continue
 				}
@@ -254,5 +253,23 @@ func handleQuotes(tokens []string) []string {
 		result += string(runes[i])
 	}
 	tokens = strings.Fields(result)
+	return tokens
+}
+
+func handleVowels(tokens []string) []string {
+	for i := 0; i < len(tokens); i++ {
+		currentToken := tokens[i]
+		switch currentToken {
+		case "a":
+			if i+1 < len(tokens) && doesBeginWithVowel(tokens[i+1]) {
+				currentToken = "an"
+			}
+		case "A":
+			if i+1 < len(tokens) && doesBeginWithVowel(tokens[i+1]) {
+				currentToken = "An"
+			}
+		}
+		tokens[i] = currentToken
+	}
 	return tokens
 }

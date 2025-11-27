@@ -77,9 +77,17 @@ func main() {
 			copyLine := append([]string{}, lineTokens...)
 			handledQuotes = append(handledQuotes, handleQuotes(copyLine))
 		}
+		fmt.Println("handledQuotes", handledQuotes)
+		//process the vowels
+		handledVowels := [][]string{}
+		for _, lineTokens := range handledQuotes {
+			copyLine := append([]string{}, lineTokens...)
+			handledVowels = append(handledVowels, handleVowels(copyLine))
+		}
+		fmt.Println("handledVowels", handledVowels)
 		//current process
 		finalTextLines := []string{}
-		for _, token := range handledQuotes {
+		for _, token := range handledVowels {
 			str := strings.Join(token, " ")
 			finalTextLines = append(finalTextLines, str)
 		}
