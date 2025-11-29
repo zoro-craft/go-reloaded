@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"go-reloaded/textprocessor"
 )
 
 func main() {
@@ -46,28 +47,28 @@ func main() {
 		linesTokensHexBinHandled := [][]string{}
 		for _, lineTokens := range linesTokens {
 			copyLine := append([]string{}, lineTokens...)
-			linesTokensHexBinHandled = append(linesTokensHexBinHandled, handleHexAndBin(copyLine))
+			linesTokensHexBinHandled = append(linesTokensHexBinHandled, HandleHexAndBin(copyLine))
 		}
 		fmt.Println("linesUpLowCapHandled", linesTokensHexBinHandled)
 		// process the simple uppercase and lowercase and capitalize conversions
 		linesUpLowCapHandled := [][]string{}
 		for _, lineTokens := range linesTokensHexBinHandled {
 			copyLine := append([]string{}, lineTokens...)
-			linesUpLowCapHandled = append(linesUpLowCapHandled, handleUpLowCap(copyLine))
+			linesUpLowCapHandled = append(linesUpLowCapHandled, HandleUpLowCap(copyLine))
 		}
 		fmt.Println("linesUpLowCapHandled", linesUpLowCapHandled)
 		// process the numbered uppercase and lowercase and capitalize conversions
 		linesNumberedUpLowCapHandled := [][]string{}
 		for _, lineTokens := range linesUpLowCapHandled {
 			copyLine := append([]string{}, lineTokens...)
-			linesNumberedUpLowCapHandled = append(linesNumberedUpLowCapHandled, handleNumberedUpLowCap(copyLine))
+			linesNumberedUpLowCapHandled = append(linesNumberedUpLowCapHandled, HandleNumberedUpLowCap(copyLine))
 		}
 		fmt.Println("linesNumberedUpLowCapHandled", linesNumberedUpLowCapHandled)
 		//process the punctuations
 		handledPunctuation := [][]string{}
 		for _, lineTokens := range linesNumberedUpLowCapHandled {
 			copyLine := append([]string{}, lineTokens...)
-			handledPunctuation = append(handledPunctuation, handlePunctuation(copyLine))
+			handledPunctuation = append(handledPunctuation, HandlePunctuation(copyLine))
 		}
 		fmt.Println("handledPunctuation", handledPunctuation)
 
@@ -75,14 +76,14 @@ func main() {
 		handledQuotes := [][]string{}
 		for _, lineTokens := range handledPunctuation {
 			copyLine := append([]string{}, lineTokens...)
-			handledQuotes = append(handledQuotes, handleQuotes(copyLine))
+			handledQuotes = append(handledQuotes, HandleQuotes(copyLine))
 		}
 		fmt.Println("handledQuotes", handledQuotes)
 		//process the vowels
 		handledVowels := [][]string{}
 		for _, lineTokens := range handledQuotes {
 			copyLine := append([]string{}, lineTokens...)
-			handledVowels = append(handledVowels, handleVowels(copyLine))
+			handledVowels = append(handledVowels, HandleVowels(copyLine))
 		}
 		fmt.Println("handledVowels", handledVowels)
 		//current process

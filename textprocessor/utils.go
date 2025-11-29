@@ -1,4 +1,4 @@
-package main
+package textprocessor
 
 import (
 	"strconv"
@@ -6,7 +6,7 @@ import (
 	"unicode"
 )
 
-func Capitalize(str string) string {
+func capitalize(str string) string {
 	if len(str) == 0 {
 		return ""
 	}
@@ -65,7 +65,7 @@ func applyCaseTransformation(word string, markerType string) string {
 	case "(low)":
 		return strings.ToLower(word)
 	case "(cap)":
-		return Capitalize(word)
+		return capitalize(word)
 	default:
 		return word
 	}
