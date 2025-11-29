@@ -6,7 +6,7 @@ import (
 )
 
 // handleHexAndBin converts hexadecimal and binary numbers to decimal format
-func handleHexAndBin(tokens []string) []string {
+func HandleHexAndBin(tokens []string) []string {
 
 	for i := 0; i < len(tokens); i++ {
 		currentToken := tokens[i]
@@ -42,7 +42,7 @@ func handleHexAndBin(tokens []string) []string {
 }
 
 // handleUpLowCap changes the case of the previous word
-func handleUpLowCap(tokens []string) []string {
+func HandleUpLowCap(tokens []string) []string {
 	for i := 0; i < len(tokens); i++ {
 		currentToken := tokens[i]
 
@@ -70,7 +70,7 @@ func handleUpLowCap(tokens []string) []string {
 
 
 // handleNumberedUpLowCap handles case changes for multiple previous words
-func handleNumberedUpLowCap(tokens []string) []string {
+func HandleNumberedUpLowCap(tokens []string) []string {
 	for i := 0; i < len(tokens); i++ {
 		token := tokens[i]
 
@@ -97,7 +97,7 @@ func handleNumberedUpLowCap(tokens []string) []string {
 }
 
 // handlePunctuation ensures proper spacing around punctuation marks
-func handlePunctuation(tokens []string) []string {
+func HandlePunctuation(tokens []string) []string {
 	punctuations := []rune{'.', ',', '!', '?', ':', ';'}
 
 	// first process: move leading punctuation to previous token
@@ -154,7 +154,7 @@ func handlePunctuation(tokens []string) []string {
 
 
 // handleQuotes ensures proper spacing around single quotes
-func handleQuotes(tokens []string) []string {
+func HandleQuotes(tokens []string) []string {
 	text := strings.Join(tokens, " ")
 	result := ""
 	quoteContent := ""
@@ -188,7 +188,7 @@ func handleQuotes(tokens []string) []string {
 
 
 // handleVowels converts "a" to "an" if next word is a begins with a vowel
-func handleVowels(tokens []string) []string {
+func HandleVowels(tokens []string) []string {
 	for i := 0; i < len(tokens); i++ {
 		if tokens[i] != "a" && tokens[i] != "A" {
 			continue
