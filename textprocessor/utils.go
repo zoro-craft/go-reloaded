@@ -115,15 +115,8 @@ func findClosingQuote(runes []rune, startIndex int) int {
 
 // gets the text between quotes and trims whitespace
 func extractQuoteContent(runes []rune, startIndex int, endIndex int) string {
-	content := ""
-	for j := startIndex + 1; j < endIndex; j++ {
-		if runes[j] == '\'' && isPartOfWord(runes, j) {
-			content += "'"
-			continue
-		}
-		content += string(runes[j])
-	}
-	return strings.TrimSpace(content)
+    content := string(runes[startIndex+1 : endIndex])
+    return strings.TrimSpace(content)
 }
 
 // finds the index of the previous word token
