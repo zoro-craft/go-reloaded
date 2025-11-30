@@ -26,9 +26,16 @@ func validateArgs() bool {
 
 // reads the content of a file and returns it as a string
 func readFile(filename string) (string, error) {
+	info, err := os.Stat(filename)
+	if err != nil {
+		return "", err
+	}
+	const maxSize = 100 * 1024
+	if info.Size() > maxSize {
+		return "", fmt.Errorf("input file is too large")
+	}
 	content, err := os.ReadFile(filename)
 	if err != nil {
-		fmt.Println("file does not exist")
 		return "", err
 	}
 	return string(content), nil
